@@ -61,6 +61,7 @@ cc_library(
         ":dot_product_avx2",
         ":dot_product_highway",
         ":dot_product_neon",
+        ":dot_product_sve",
         ":dot_product_sse4",
         "//scann/data_format:datapoint",
         "//scann/distance_measures:distance_measure_base",
@@ -133,6 +134,20 @@ cc_library(
         "//scann/data_format:datapoint",
         "//scann/utils:common",
         "//scann/utils/intrinsics:neon",
+        "@com_google_absl//absl/log",
+        "@com_google_absl//absl/log:check",
+    ],
+    alwayslink = 1,
+)
+
+cc_library(
+    name = "dot_product_sve",
+    srcs = ["dot_product_sve.cc"],
+    hdrs = ["dot_product_sve.h"],
+    deps = [
+        "//scann/data_format:datapoint",
+        "//scann/utils:common",
+        "//scann/utils/intrinsics:attributes",
         "@com_google_absl//absl/log",
         "@com_google_absl//absl/log:check",
     ],
