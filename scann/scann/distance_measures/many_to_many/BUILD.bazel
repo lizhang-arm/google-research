@@ -31,6 +31,7 @@ cc_library(
         "//scann/utils/intrinsics:horizontal_sum",
         "//scann/utils/intrinsics:mem_neon",
         "//scann/utils/intrinsics:simd",
+        "//scann/utils/intrinsics:transpose_neon",
     ],
 )
 
@@ -69,6 +70,7 @@ cc_library(
         "//scann/utils:fast_top_neighbors",
         "//scann/utils:types",
         "//scann/utils/intrinsics:mem_neon",
+        "//scann/utils/intrinsics:transpose_neon",
     ],
 )
 
