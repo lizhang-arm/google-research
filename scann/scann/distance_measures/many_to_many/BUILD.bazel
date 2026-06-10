@@ -12,6 +12,7 @@ cc_library(
     hdrs = ["many_to_many_templates.h"],
     textual_hdrs = [
         "many_to_many_impl.inc",
+        "many_to_many_impl_neon.inc",
         "many_to_many_sfp8_impl.inc",
     ],
     deps = [
@@ -28,7 +29,9 @@ cc_library(
         "//scann/utils/intrinsics:fma",
         "//scann/utils/intrinsics:highway",
         "//scann/utils/intrinsics:horizontal_sum",
+        "//scann/utils/intrinsics:mem_neon",
         "//scann/utils/intrinsics:simd",
+        "//scann/utils/intrinsics:transpose_neon",
     ],
 )
 
@@ -52,7 +55,10 @@ cc_library(
         "-O3",
         "-Wno-pass-failed",
     ],
-    textual_hdrs = ["many_to_many_impl.inc"],
+    textual_hdrs = [
+        "many_to_many_impl.inc",
+        "many_to_many_impl_neon.inc",
+    ],
     deps = [
         ":many_to_many_common",
         ":many_to_many_templates",
@@ -63,6 +69,8 @@ cc_library(
         "//scann/utils:common",
         "//scann/utils:fast_top_neighbors",
         "//scann/utils:types",
+        "//scann/utils/intrinsics:mem_neon",
+        "//scann/utils/intrinsics:transpose_neon",
     ],
 )
 

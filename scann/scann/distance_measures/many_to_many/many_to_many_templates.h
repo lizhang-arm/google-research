@@ -29,6 +29,10 @@
 #include "scann/utils/intrinsics/fma.h"
 #include "scann/utils/intrinsics/highway.h"
 #include "scann/utils/intrinsics/horizontal_sum.h"
+#ifdef __aarch64__
+#include "scann/utils/intrinsics/mem_neon.h"
+#include "scann/utils/intrinsics/transpose_neon.h"
+#endif
 #include "scann/utils/intrinsics/simd.h"
 #include "scann/utils/types.h"
 
