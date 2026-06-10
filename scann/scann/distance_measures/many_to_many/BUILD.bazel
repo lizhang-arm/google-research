@@ -29,6 +29,7 @@ cc_library(
         "//scann/utils/intrinsics:fma",
         "//scann/utils/intrinsics:highway",
         "//scann/utils/intrinsics:horizontal_sum",
+        "//scann/utils/intrinsics:mem_neon",
         "//scann/utils/intrinsics:simd",
     ],
 )
@@ -67,6 +68,7 @@ cc_library(
         "//scann/utils:common",
         "//scann/utils:fast_top_neighbors",
         "//scann/utils:types",
+        "//scann/utils/intrinsics:mem_neon",
     ],
 )
 
