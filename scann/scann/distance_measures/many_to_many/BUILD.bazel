@@ -12,6 +12,7 @@ cc_library(
     hdrs = ["many_to_many_templates.h"],
     textual_hdrs = [
         "many_to_many_impl.inc",
+        "many_to_many_impl_neon.inc",
         "many_to_many_sfp8_impl.inc",
     ],
     deps = [
@@ -52,7 +53,10 @@ cc_library(
         "-O3",
         "-Wno-pass-failed",
     ],
-    textual_hdrs = ["many_to_many_impl.inc"],
+    textual_hdrs = [
+        "many_to_many_impl.inc",
+        "many_to_many_impl_neon.inc",
+    ],
     deps = [
         ":many_to_many_common",
         ":many_to_many_templates",
