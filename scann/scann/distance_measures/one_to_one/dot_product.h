@@ -27,7 +27,9 @@
 #include "scann/distance_measures/one_to_one/dot_product_avx1.h"
 #include "scann/distance_measures/one_to_one/dot_product_avx2.h"
 #include "scann/distance_measures/one_to_one/dot_product_highway.h"
+#include "scann/distance_measures/one_to_one/dot_product_neon.h"
 #include "scann/distance_measures/one_to_one/dot_product_sse4.h"
+#include "scann/distance_measures/one_to_one/dot_product_sve.h"
 #include "scann/utils/common.h"
 #include "scann/utils/intrinsics/flags.h"
 #include "scann/utils/reduction.h"
@@ -295,6 +297,28 @@ inline double DenseDotProduct<float, int8_t, int8_t>(
 }
 
 #endif
+
+#ifdef __aarch64__
+
+template <>
+inline double DenseDotProduct<int8_t, float>(const DatapointPtr<int8_t>& a,
+                                             const DatapointPtr<float>& b) {
+  if (RuntimeSupportsSVE()) {
+    return dp_internal::DenseDotProductSve(a, b);
+  } else if (RuntimeSupportsNeon()) {
+    return dp_internal::DenseDotProductNeon(a, b);
+  } else {
+    return DenseDotProductFallback(a, b);
+  }
+}
+
+template <>
+inline double DenseDotProduct<float, int8_t>(const DatapointPtr<float>& a,
+                                             const DatapointPtr<int8_t>& b) {
+  return DenseDotProduct(b, a);
+}
+
+#endif  // __aarch64__
 
 template <typename T, typename U>
 double HybridDotProduct(const DatapointPtr<T>& a, const DatapointPtr<U>& b) {
