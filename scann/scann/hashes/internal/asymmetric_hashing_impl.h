@@ -19,6 +19,7 @@
 
 #include <cmath>
 #include <cstdint>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -30,8 +31,11 @@
 #include "scann/hashes/asymmetric_hashing2/training_options_base.h"
 #include "scann/hashes/internal/asymmetric_hashing_postprocess.h"
 #include "scann/oss_wrappers/scann_aligned_malloc.h"
+#include "scann/oss_wrappers/scann_status.h"
+#include "scann/projection/chunking_projection.h"
 #include "scann/utils/common.h"
 #include "scann/utils/datapoint_utils.h"
+#include "scann/utils/noise_shaping_utils.h"
 #include "scann/utils/top_n_amortized_constant.h"
 #include "scann/utils/types.h"
 
@@ -74,6 +78,38 @@ inline std::vector<DenseDataset<double>> ConvertCentersIfNecessary<double>(
     std::vector<DenseDataset<double>> double_centers) {
   return double_centers;
 }
+
+namespace fallback {
+
+struct SubspaceResidualStats {
+  double residual_norm = 0.0;
+
+  double parallel_residual_component = 0.0;
+};
+
+double ComputeParallelResidualComponent(
+    ConstSpan<uint8_t> quantized,
+    ConstSpan<std::vector<SubspaceResidualStats>> residual_stats);
+
+struct CoordinateDescentResult {
+  uint8_t new_center_idx = 0;
+  double cost_delta = 0.0;
+  double new_parallel_residual_component = 0.0;
+};
+
+
+Status ValidateNoiseShapingParams(double threshold, double eta);
+
+}  // namespace fallback
+
+template <typename T>
+Status IndexDatapointNoiseShapedFallback(
+    const DatapointPtr<T>& maybe_residual_dptr,
+    const DatapointPtr<T>& original_dptr,
+    const ChunkingProjection<T>& projection,
+    ConstSpan<DenseDataset<FloatingTypeFor<T>>> centers, double threshold,
+    double eta, MutableSpan<uint8_t> result);
+
 
 template <typename T>
 struct AhImpl {
